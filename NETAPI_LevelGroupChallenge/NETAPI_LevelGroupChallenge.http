@@ -1,0 +1,6 @@
+@NETAPI_LevelGroupChallenge_HostAddress = http://localhost:5165
+
+GET {{NETAPI_LevelGroupChallenge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
