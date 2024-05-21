@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NETAPI_LevelGroupChallenge
+namespace NETAPI_LevelGroupChallenge.Models
 {
     public class Categoria
     {

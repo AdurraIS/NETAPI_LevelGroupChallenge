@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NETAPI_LevelGroupChallenge.Models;
 
-namespace NETAPI_LevelGroupChallenge
+namespace NETAPI_LevelGroupChallenge.Data
 {
     public class CategoriaDb : DbContext
     {
