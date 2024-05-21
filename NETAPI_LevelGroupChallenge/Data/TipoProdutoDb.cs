@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NETAPI_LevelGroupChallenge.Models;
 
-namespace NETAPI_LevelGroupChallenge
+namespace NETAPI_LevelGroupChallenge.Data
 {
     public class TipoProdutoDb : DbContext
     {
@@ -13,18 +14,18 @@ namespace NETAPI_LevelGroupChallenge
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TipoProduto>().ToTable("TIPOPRODUTO");
+            modelBuilder.Entity<TipoProduto>().ToTable("TIPO_PRODUTO");
 
             modelBuilder.Entity<TipoProduto>(entity =>
          {
              entity.Property(e => e.Id)
                  .HasColumnType("INTEGER")
                  .UseIdentityColumn()
-                 .HasColumnName("PRODUCT_TYPE_ID");
+                 .HasColumnName("TIPO_PRODUTO_ID");
              entity.Property(e => e.Name)
                  .IsRequired()
                  .HasColumnType("NVARCHAR2(255)")
-                 .HasColumnName("PRODUCT_TYPE_NAME");
+                 .HasColumnName("TIPO_PRODUTO_NAME");
          });
         }
     }

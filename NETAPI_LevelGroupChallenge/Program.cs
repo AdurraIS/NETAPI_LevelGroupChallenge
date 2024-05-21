@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NETAPI_LevelGroupChallenge;
-using static System.Net.Mime.MediaTypeNames;
+using NETAPI_LevelGroupChallenge.Data;
+using NETAPI_LevelGroupChallenge.DTOs;
+using NETAPI_LevelGroupChallenge.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ var app = builder.Build();
 
 
 app.MapGet("/categorias", GetAllCategorias).Produces<IList<CategoriaDb>>();
+app.MapGet("/categorias/paginable", GetPaginableCategorias).Produces<IList<CategoriaDb>>();
+app.MapGet("/categorias/paginable/{searchTerm}", GetPaginableLikeCategorias).Produces<IList<CategoriaDb>>();
 app.MapPost("/categorias", CreateCategoria)
     .Accepts<CategoriaDTO>("application/json")
     .Produces<CategoriaDTO>(StatusCodes.Status201Created)
@@ -27,6 +31,8 @@ app.MapDelete("/categorias/{id}", DeleteCategoria);
 
 
 app.MapGet("/tipoprodutos", GetAllTipoProdutos).Produces<IList<TipoProdutoDb>>();
+app.MapGet("/tipoprodutos/paginable", GetPaginableTipoProduto).Produces<IList<TipoProdutoDb>>();
+app.MapGet("/tipoprodutos/paginable/{searchTerm}", GetPaginableLikeTipoProduto).Produces<IList<TipoProdutoDb>>();
 app.MapPost("/tipoprodutos", CreateTipoProduto)
     .Accepts<TipoProdutoDTO>("application/json")
     .Produces<TipoProdutoDTO>(StatusCodes.Status201Created)
@@ -45,6 +51,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseCors(builder =>
+{
+    builder.AllowAnyOrigin()
+           .AllowAnyHeader()
+           .AllowAnyMethod();
+});
 app.UseAuthorization();
 
 app.MapControllers();
@@ -57,6 +71,25 @@ static async Task<IResult> GetAllCategorias(CategoriaDb db)
         .Select(categoria => new CategoriaDTO(
             categoria.Id, categoria.Name))
         .ToListAsync());
+}
+static async Task<IResult> GetPaginableCategorias(CategoriaDb db, [FromQuery]int PageNo = 1, [FromQuery] int PageSize = 10)
+{
+    return TypedResults.Ok(await db.Categorias.AsNoTracking()
+            .OrderBy(x => x.Id)
+            .Skip((PageNo - 1) * PageSize)
+            .Take(PageSize)
+            .ToListAsync()
+        );
+}
+static async Task<IResult> GetPaginableLikeCategorias(String searchTerm, CategoriaDb db, [FromQuery] int PageNo = 1, [FromQuery] int PageSize = 10)
+{
+    return TypedResults.Ok(await db.Categorias.AsNoTracking()
+            .Where(e => EF.Functions.Like(e.Name, $"%{searchTerm}%"))
+            .OrderBy(x => x.Id)
+            .Skip((PageNo - 1) * PageSize)
+            .Take(PageSize)
+            .ToListAsync()
+        );
 }
 static async Task<IResult> CreateCategoria(CategoriaDTO categoriaDTO, HttpContext context)
 {
@@ -102,7 +135,25 @@ static async Task<IResult> GetAllTipoProdutos(TipoProdutoDb db)
             tipoProduto.Id, tipoProduto.Name))
         .ToListAsync());
 }
-
+static async Task<IResult> GetPaginableTipoProduto(TipoProdutoDb db, [FromQuery] int PageNo = 1, [FromQuery] int PageSize = 10)
+{
+    return TypedResults.Ok(await db.TipoProdutos.AsNoTracking()
+            .OrderBy(x => x.Id)
+            .Skip((PageNo - 1) * PageSize)
+            .Take(PageSize)
+            .ToListAsync()
+        );
+}
+static async Task<IResult> GetPaginableLikeTipoProduto(String searchTerm, TipoProdutoDb db, [FromQuery] int PageNo = 1, [FromQuery] int PageSize = 10)
+{
+    return TypedResults.Ok(await db.TipoProdutos.AsNoTracking()
+            .Where(e => EF.Functions.Like(e.Name, $"%{searchTerm}%"))
+            .OrderBy(x => x.Id)
+            .Skip((PageNo - 1) * PageSize)
+            .Take(PageSize)
+            .ToListAsync()
+        );
+}
 static async Task<IResult> CreateTipoProduto(TipoProdutoDTO tipoProdutoDTO, HttpContext context)
 {
     var db = context.RequestServices.GetRequiredService<TipoProdutoDb>();
