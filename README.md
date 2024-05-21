@@ -9,7 +9,7 @@ A equipe SalesUnity esta desenvolvendo uma aplicação web que simplifica o proc
 - Gerar impactos financeiros positivos para as empresas, através da automação e simplificação dos processos, resultando em economias operacionais consideráveis, redução da necessidade de mão de obra e agilização do ciclo de compras.
 # Links
 ### [Video apresentando Solução .NET](https://www.youtube.com/watch?v=sWFI0jVEgRk)
-### [Link repositório de Spring Boot](https://github.com/AdurraIS/NETAPI_LevelGroupChallenge)
+### [Link repositório de Spring Boot](https://github.com/AdurraIS/SpringAPI_LevelGroupChallenge)
 ### [Link repositório de React](https://github.com/AdurraIS/reactweb_levelgroupchallenge)
 ## Desenvolvedores:
 | Registro | Nome  | Responsabilidade | Disciplinas|
